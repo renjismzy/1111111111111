@@ -8,15 +8,15 @@
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { z } from "zod"
-import * as fs from "fs-extra"
-import * as path from "path"
-import * as mime from "mime-types"
-import * as mammoth from "mammoth"
-import * as pdfParse from "pdf-parse"
+import fs from "fs-extra"
+import path from "path"
+import mime from "mime-types"
+import mammoth from "mammoth"
+import pdfParse from "pdf-parse"
 import { marked } from "marked"
-import * as TurndownService from "turndown"
+import TurndownService from "turndown"
 import { JSDOM } from "jsdom"
-import * as htmlPdf from "html-pdf-node"
+import htmlPdf from "html-pdf-node"
 import fetch from "node-fetch"
 
 // Configuration schema matching smithery.yaml
@@ -94,7 +94,7 @@ class DocumentConverter {
 
 	constructor(config: z.infer<typeof configSchema>) {
 		this.config = config
-		this.turndownService = new (TurndownService as any)({
+		this.turndownService = new TurndownService({
 			headingStyle: 'atx',
 			codeBlockStyle: 'fenced'
 		})

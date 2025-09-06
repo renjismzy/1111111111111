@@ -5,6 +5,8 @@ import inquirer from "inquirer"
 import { Command } from "commander"
 import boxen from "boxen"
 import chalk from "chalk"
+import fs from "fs-extra"
+import path from "path"
 
 function detectPackageManager(): string {
 	const userAgent = process.env.npm_config_user_agent
@@ -69,31 +71,28 @@ async function load<T>(
 	return result
 }
 
-await load("Cloning scaffold from GitHub...", "Scaffold cloned", async () => {
-	// Clone the scaffold and only keep the scaffold directory
-	await $`git clone https://github.com/smithery-ai/create-smithery.git ${projectName}`
-	const files = await $`ls -al ${projectName}`
-	for (const file of files.stdout.split("\n")) {
-		const fileName = file.split(" ").pop()
-		if (
-			fileName &&
-			fileName !== "scaffold" &&
-			fileName !== "." &&
-			fileName !== ".."
-		) {
-			await $`rm -rf ${projectName}/${fileName}`
-		}
-	}
-	await $`cp -r ${projectName}/scaffold/. ${projectName}/`
-	await $`rm -rf ${projectName}/scaffold`
+await load("Creating project from scaffold...", "Project created", async () => {
+	// Copy scaffold directory from current location
+	const scaffoldPath = path.join(process.cwd(), "scaffold")
+	const projectPath = path.join(process.cwd(), projectName)
+	
+	// Create project directory and copy scaffold contents
+	await fs.ensureDir(projectPath)
+	await fs.copy(scaffoldPath, projectPath)
 })
 
 await load("Navigating to project...", "Project navigated", async () => {
 	// await $`cd ${projectName}`; Not needed - we use cwd option instead
 })
-await $`rm -rf ${projectName}/.git`
-await $`rm -rf ${projectName}/package-lock.json`
-await $`rm -rf ${projectName}/node_modules`
+// Clean up unnecessary files
+const projectPath = path.join(process.cwd(), projectName)
+const gitPath = path.join(projectPath, ".git")
+const packageLockPath = path.join(projectPath, "package-lock.json")
+const nodeModulesPath = path.join(projectPath, "node_modules")
+
+if (await fs.pathExists(gitPath)) await fs.remove(gitPath)
+if (await fs.pathExists(packageLockPath)) await fs.remove(packageLockPath)
+if (await fs.pathExists(nodeModulesPath)) await fs.remove(nodeModulesPath)
 
 await load("Installing dependencies...", "Dependencies installed", async () => {
 	console.log("\n\n")

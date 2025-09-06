@@ -1,0 +1,13 @@
+# Converted Document
+
+Hello World!
+
+This is a test document for the Document Conversion Assistant.
+
+Features to test:
+- Text to HTML conversion
+- Text to Markdown conversion
+- Format preservation
+- File handling
+
+The document conversion tool should be able to convert this simple text file to various formats while maintaining the structure and content.
