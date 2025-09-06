@@ -12,8 +12,8 @@ import * as fs from "fs-extra"
 import * as path from "path"
 import * as mime from "mime-types"
 import * as mammoth from "mammoth"
-import * as pdfParse from "pdf-parse"
-import { marked } from "marked"
+import pdfParse from "pdf-parse"
+import marked from "marked"
 import TurndownService from "turndown"
 import { JSDOM } from "jsdom"
 import * as htmlPdf from "html-pdf-node"
@@ -153,7 +153,7 @@ class DocumentConverter {
 
 	private async readDOCX(filePath: string) {
 		const buffer = await fs.readFile(filePath)
-		const result = await mammoth.extractRawText({ buffer })
+		const result = await mammoth.extractRawText(buffer)
 		return {
 			content: result.value,
 			format: 'docx',
@@ -232,7 +232,7 @@ class DocumentConverter {
 	private async convertToHTML(content: string, fromFormat: string): Promise<string> {
 		switch (fromFormat) {
 			case 'md':
-				return marked(content)
+				return marked.parse(content)
 			case 'txt':
 				return `<html><body><pre>${content}</pre></body></html>`
 			case 'html':
@@ -268,7 +268,7 @@ class DocumentConverter {
 		}
 
 		const file = { content: htmlContent }
-		const pdfBuffer = await htmlPdf.generatePdf(file, options)
+		const pdfBuffer = await htmlPdf.generatePdf(file, options) as any
 		await fs.writeFile(outputPath, pdfBuffer)
 		return outputPath
 	}
