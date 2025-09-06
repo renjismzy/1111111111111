@@ -8,15 +8,15 @@
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { z } from "zod"
-import fs from "fs-extra"
-import path from "path"
-import mime from "mime-types"
-import mammoth from "mammoth"
-import pdfParse from "pdf-parse"
+import * as fs from "fs-extra"
+import * as path from "path"
+import * as mime from "mime-types"
+import * as mammoth from "mammoth"
+import * as pdfParse from "pdf-parse"
 import { marked } from "marked"
 import TurndownService from "turndown"
 import { JSDOM } from "jsdom"
-import htmlPdf from "html-pdf-node"
+import * as htmlPdf from "html-pdf-node"
 import fetch from "node-fetch"
 
 // Configuration schema matching smithery.yaml
@@ -291,7 +291,6 @@ export default function createServer({
 	server.registerTool(
 		"convert_document",
 		{
-			title: "Convert Document",
 			description: "Convert a document from one format to another while preserving formatting",
 			inputSchema: {
 				input_path: z.string().describe("Path to the input document"),
@@ -323,7 +322,6 @@ export default function createServer({
 	server.registerTool(
 		"get_document_info",
 		{
-			title: "Get Document Information",
 			description: "Get detailed information about a document including format, size, and metadata",
 			inputSchema: {
 				file_path: z.string().describe("Path to the document file")
@@ -361,7 +359,6 @@ export default function createServer({
 	server.registerTool(
 		"batch_convert",
 		{
-			title: "Batch Convert Documents",
 			description: "Convert multiple documents in a directory to the same output format",
 			inputSchema: {
 				input_directory: z.string().describe("Directory containing input documents"),
@@ -429,7 +426,6 @@ export default function createServer({
 	server.registerTool(
 		"list_supported_formats",
 		{
-			title: "List Supported Formats",
 			description: "Get a list of all supported input and output formats",
 			inputSchema: {},
 		},
@@ -454,7 +450,6 @@ export default function createServer({
 	server.registerTool(
 		"search_mcp_servers",
 		{
-			title: "Search MCP Servers",
 			description: "Search for MCP servers in the Smithery Registry",
 			inputSchema: {
 				query: z.string().optional().describe("Search query for MCP servers (optional)"),
@@ -494,7 +489,6 @@ export default function createServer({
 	server.registerTool(
 		"get_mcp_server_details",
 		{
-			title: "Get MCP Server Details",
 			description: "Get detailed information about a specific MCP server",
 			inputSchema: {
 				server_name: z.string().describe("Qualified name of the MCP server (owner/repository)")
@@ -533,7 +527,6 @@ export default function createServer({
 	server.registerTool(
 		"create_mcp_connection_url",
 		{
-			title: "Create MCP Connection URL",
 			description: "Generate a WebSocket connection URL for an MCP server",
 			inputSchema: {
 				server_name: z.string().describe("Qualified name of the MCP server (owner/repository)"),
@@ -560,53 +553,7 @@ export default function createServer({
 		}
 	)
 
-	// Add a resource for conversion history
-	server.registerResource(
-		"conversion-history",
-		"history://conversions",
-		{
-			title: "Document Conversion History",
-			description: "View the history and capabilities of the document conversion assistant",
-		},
-		async uri => ({
-			contents: [
-				{
-					uri: uri.href,
-					text: `Document Conversion Assistant\n\nThis tool provides comprehensive document conversion capabilities while preserving formatting and style consistency.\n\nSupported Operations:\n- Single document conversion between PDF, DOCX, HTML, Markdown, and TXT formats\n- Batch conversion of multiple documents\n- Document information extraction and metadata analysis\n- Format detection and validation\n\nKey Features:\n- Automatic format detection\n- Style and formatting preservation\n- Configurable file size limits\n- Batch processing capabilities\n- Detailed error reporting\n\nConfiguration:\n- Maximum file size: ${(config.max_file_size / 1024 / 1024).toFixed(2)} MB\n- Output directory: ${config.output_directory}\n- Preserve formatting: ${config.preserve_formatting ? 'Enabled' : 'Disabled'}`,
-					mimeType: "text/plain",
-				},
-			],
-		}),
-	)
 
-	// Add a prompt for document conversion guidance
-	server.registerPrompt(
-		"convert_guide",
-		{
-			title: "Document Conversion Guide",
-			description: "Get guidance on converting documents with specific requirements",
-			argsSchema: {
-				source_format: z.string().describe("Source document format"),
-				target_format: z.string().describe("Target document format"),
-				special_requirements: z.string().optional().describe("Any special formatting requirements")
-			},
-		},
-		async ({ source_format, target_format, special_requirements }) => {
-			const guidance = `Please help me convert a ${source_format} document to ${target_format} format${special_requirements ? ` with the following requirements: ${special_requirements}` : ''}. What's the best approach to maintain formatting and ensure quality conversion?`
-			
-			return {
-				messages: [
-					{
-						role: "user",
-						content: {
-							type: "text",
-							text: guidance,
-						},
-					},
-				],
-			}
-		},
-	)
 
 	return server.server
 }
