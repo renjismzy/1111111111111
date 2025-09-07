@@ -630,6 +630,7 @@ async function main() {
 }
 
 // Start the server if this file is run directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+// 检查当前文件是否为直接运行的入口文件
+if (require.main === module) {
   main().catch(console.error);
 }
