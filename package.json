@@ -23,7 +23,9 @@
 		"@types/inquirer": "^9.0.8",
 		"@types/node": "^22.15.29",
 		"tsx": "^4.19.4",
-		"typescript": "^5.8.3"
+		"typescript": "^5.8.3",
+		"@types/mime-types": "^2.1.4",
+		"@types/jsdom": "^21.1.6"
 	},
 	"dependencies": {
 		"boxen": "^8.0.1",
@@ -31,6 +33,16 @@
 		"commander": "^14.0.0",
 		"execa": "^9.6.0",
 		"fs-extra": "^11.2.0",
-		"inquirer": "^12.6.3"
+		"inquirer": "^12.6.3",
+		"@modelcontextprotocol/sdk": "^1.17.4",
+		"zod": "^3.25.46",
+		"mammoth": "^1.6.0",
+		"pdf-parse": "^1.1.1",
+		"html-pdf-node": "^1.0.8",
+		"turndown": "^7.1.2",
+		"marked": "^12.0.0",
+		"jsdom": "^24.0.0",
+		"mime-types": "^2.1.35",
+		"node-fetch": "^3.3.2"
 	}
 }
