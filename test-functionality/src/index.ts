@@ -13,7 +13,7 @@ import * as path from "path"
 import * as mime from "mime-types"
 import * as mammoth from "mammoth"
 import pdfParse from "pdf-parse"
-import { marked } from "marked"
+import * as marked from "marked"
 import TurndownService from "turndown"
 import { JSDOM } from "jsdom"
 import * as htmlPdf from "html-pdf-node"
@@ -232,7 +232,7 @@ class DocumentConverter {
 	private async convertToHTML(content: string, fromFormat: string): Promise<string> {
 		switch (fromFormat) {
 			case 'md':
-				return marked(content)
+				return marked.parse(content)
 			case 'txt':
 				return `<html><body><pre>${content}</pre></body></html>`
 			case 'html':
