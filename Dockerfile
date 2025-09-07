@@ -1,22 +1,29 @@
-FROM node:18-alpine
+# Build stage
+FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files first for better caching
-COPY package*.json ./
-COPY tsconfig.json ./
+# Copy package files
+COPY package*.json tsconfig.json ./
 
-# Install all dependencies (including dev dependencies for build)
+# Install dependencies
 RUN npm ci
 
-# Copy source code
+# Copy source and build
 COPY src ./src
-
-# Build the TypeScript code
 RUN npm run build
 
-# Remove dev dependencies to reduce image size
-RUN npm prune --production
+# Production stage
+FROM node:18-alpine AS production
+
+WORKDIR /app
+
+# Copy package files and install production dependencies
+COPY package*.json ./
+RUN npm ci --only=production && npm cache clean --force
+
+# Copy built application from builder stage
+COPY --from=builder /app/dist ./dist
 
 # Start the MCP server
 CMD ["node", "dist/src/index.js"]
