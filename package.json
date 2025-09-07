@@ -1,6 +1,6 @@
 {
 	"name": "create-document-converter",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "CLI for creating document conversion tools with Smithery - converts between PDF, DOCX, HTML, Markdown, and TXT while preserving formatting",
 	"main": "dist/index.js",
 	"bin": {
