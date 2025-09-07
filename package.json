@@ -1,19 +1,25 @@
 {
 	"name": "create-document-converter",
 	"version": "1.0.2",
-	"description": "CLI for creating document conversion tools with Smithery - converts between PDF, DOCX, HTML, Markdown, and TXT while preserving formatting",
-	"main": "dist/index.js",
+	"description": "MCP Server for document conversion - converts between PDF, DOCX, HTML, Markdown, and TXT while preserving formatting",
+	"main": "dist/src/index.js",
 	"bin": {
 		"create-document-converter": "dist/index.js"
 	},
 	"type": "module",
 	"scripts": {
-		"prepare": "npm run build",
 		"build": "tsc",
-		"start": "if exist my-app rmdir /s /q my-app && npm run build && node dist/index.js my-app",
-		"check": "npx @biomejs/biome check --write --unsafe"
+		"start": "node dist/src/index.js",
+		"dev": "tsx src/index.ts",
+		"mcp": "node dist/src/index.js"
 	},
-	"keywords": [],
+	"keywords": ["mcp", "mcp-server", "document-conversion", "pdf", "docx", "html", "markdown"],
+  "mcp": {
+    "server": {
+      "transport": "stdio",
+      "capabilities": ["tools", "resources"]
+    }
+  },
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {

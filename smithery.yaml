@@ -1,9 +1,17 @@
-runtime: "container"
-build:
-  dockerfile: "Dockerfile"
-  dockerBuildPath: "."
-startCommand:
-  type: "stdio"
+version: "1"
+services:
+  document-converter:
+    build:
+      dockerfile: Dockerfile
+    server:
+      command: ["node", "dist/src/index.js"]
+      env:
+        NODE_ENV: production
+      mcp:
+        transport: stdio
+        capabilities:
+          - tools
+          - resources
 config:
   debug: false
   max_file_size: 10485760  # 10MB
